@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
 import { BsFillSendFill } from "react-icons/bs";
-import avatar from "../../assets/avatar3.png";
+import avatar from "../../assets/Avatar3.png";
 import axios from 'axios';
 import useWebSocket from 'react-use-websocket';
 import { getTokenFromCookie, getProfileArtisan } from '../../api/getProfile';
