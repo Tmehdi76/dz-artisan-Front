@@ -29,8 +29,8 @@ import DashBoard from './pages/Client/Profile/dashBoard1.jsx';
 
 import Homepage from "./pages/Guest/HomePage.jsx"
 import Services from './pages/Guest/SerVices.jsx';
-import Contact from './Pages/Guest/Contact.jsx';
-import About from './pages/Guest/About_.jsx';
+import Contact from './pages/Guest/ConTact.jsx';
+import About from './pages/Guest/About.jsx';
 
 import Artisandash from './pages/Artisan/Profile/Artisandash.jsx';
 
