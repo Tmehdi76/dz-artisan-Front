@@ -62,7 +62,7 @@ export const routes = [
     children: [
       { path: "signup", element: <ClientSignUpPage /> },
       { path: "", element: <DashBoard /> },
-      { path: "devis", element: <RqDevis /> },
+      { path: "rqdevis/:artisan_id", element: <RqDevis /> },
       {
         path: "devis",
         element: <UserDevis />,
@@ -103,7 +103,7 @@ export const routes = [
     children: [
       { path: "", element: <Artisandash /> },
       { path: "signup", element: <ArtisanSignUpPage /> },
-      { path: "devis", element: <RpDevis /> },
+      { path: "rpdevis/:id_rqdevis", element: <RpDevis /> },
       
       
       {

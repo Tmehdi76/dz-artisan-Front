@@ -3,7 +3,7 @@ import { MdEmail } from "react-icons/md";
 import { getProfileArtisanById, getTokenFromCookie } from "../../../api/getProfile";
 import { getArtisanSpecialitesById } from "../../../api/Specialite";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom"; // Import useParams to get the artisan_id from the URL
+import { useParams, Link } from "react-router-dom"; // Import useParams to get the artisan_id from the URL
 
 function Generale() {
     const { artisan_id } = useParams(); // Extract artisan_id from the URL
@@ -104,7 +104,7 @@ function Generale() {
                         {artisan?.localisation}
                     </p>
                 </div>
-                <div className="flex flex-row gap-4 mt-4">
+                <div className="flex flex-row gap-4 items-center mt-4">
                     <a
                         href="#"
                         className="flex items-center gap-2 px-4 py-2 rounded-md border-2 border-black bg-[#F1EBEB]"
@@ -112,12 +112,15 @@ function Generale() {
                         <MdEmail className="text-lightGreen" />
                         <span className="text-lightGreen">Chattez avec moi</span>
                     </a>
+                    <Link
+                        to={`/user/rqdevis/${artisan_id}`}>
                     <a
                         href="#"
                         className="px-4 py-2 rounded-md border-2 border-black bg-lightGreen text-white"
                     >
                         Demander un devis
                     </a>
+                    </Link>
                 </div>
             </div>
         </div>

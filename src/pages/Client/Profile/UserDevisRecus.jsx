@@ -3,7 +3,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { BsThreeDots } from "react-icons/bs";
 import { GoAlertFill } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
-import {UserrqDevisList} from "../../../api/devis";
+import { UserrqDevisList } from "../../../api/devis";
 import { getTokenFromCookie } from '../../../api/getProfile';
 
 function ImageModal({ imageUrl, onClose }) {
@@ -27,74 +27,34 @@ function ImageModal({ imageUrl, onClose }) {
 }
 
 function UserDevisRecus() {
-    const initialQuotes = [
-        {
-            pfp: "jardinier.png",
-            fullName: "Alice",
-            urgency: "Urgent",
-            serviceName: "Installation",
-            desc: "Nous avons besoin d'un devis pour votre jardinage.",
-            date: "2022-01-25",
-            budjet: "3500 DZD",
-            illustration: "jardinier.png",
-        },{
-            pfp: "jardinier.png",
-            fullName: "Alice",
-            urgency: "Urgent",
-            serviceName: "Installation",
-            desc: "Nous avons besoin d'un devis pour votre jardinage.",
-            date: "2022-01-25",
-            budjet: "350000 DZD",
-            illustration: "jardinier.png",
-        },
-        {
-            pfp: "jardinier.png",
-            fullName: "Bob",
-            urgency: "Normal",
-            serviceName: "Plomberie",
-            desc: "Besoin d'un devis pour une réparation de plomberie.",
-            date: "2022-02-15",
-            budjet: "15000 DZD",
-            illustration: "plomberie.png",
-        }
-    ];
-
-    const [quotes, setQuotes] = useState(initialQuotes);
     const [expandedIndex, setExpandedIndex] = useState(null);
     const [showLinks, setShowLinks] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
     const [isHovered, setIsHovered] = useState(null);
-    const [devisList, setDevisList] = useState(null);
-    
-      // Function to fetch user profile
-      const UserDevisListrq = async () => {
+    const [devisList, setDevisList] = useState([]);
+
+    // Function to fetch user devis list
+    const UserDevisListrq = async () => {
         try {
-          const token = getTokenFromCookie();  // Get the token from cookies
-          if (token) {
-            try {
-              const response = await UserrqDevisList({
-                headers: {
-                  authorization: `Bearer ${token}`
-                }
-              });
-              setDevisList(response.user);  // Set the user data
-            } catch (userLoginError) {
-              // Handle user login failure or error
-              console.error("Error fetching devis:", userLoginError);
+            const token = getTokenFromCookie();  // Get the token from cookies
+            if (token) {
+                const response = await UserrqDevisList({
+                    headers: {
+                        authorization: `Bearer ${token}`
+                    }
+                });
+                setDevisList(response);  // Set the fetched devis list
+            } else {
+                console.error("No token found");  // Log error if no token is found
             }
-          } else {
-            console.error("No token found");  // Log error if no token is found
-          }
         } catch (error) {
-          console.error("Error fetching devis:", error);  // Handle the error (e.g., show a notification)
-          throw error;  // Handle further error as needed
+            console.error("Error fetching devis:", error);  // Handle the error
         }
-      };
-    
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         UserDevisListrq();  // Call the function when the component mounts
-      }, []); 
- 
+    }, []);
 
     const toggleExpand = (index) => {
         setExpandedIndex(expandedIndex === index ? null : index);
@@ -103,6 +63,18 @@ function UserDevisRecus() {
     const toggleLinks = (index) => {
         setShowLinks(showLinks === index ? null : index);
     };
+
+    // Transform the fetched data into the structure expected by the table
+    const transformedQuotes = devisList.map((devis) => ({
+        fullName: devis.full_name, // Use full_name instead of artisan_id
+        imageFile: devis.image_file, // Use image_file for the profile picture
+        serviceName: devis.service_demande,
+        desc: devis.description,
+        date: devis.date_souhaite,
+        budjet: `${devis.budget_prevu} DZD`,
+        illustration: devis.illustrations,
+        urgency: devis.urgence ? "Urgent" : "Normal", // Convert boolean to "Urgent" or "Normal"
+    }));
 
     return (
         <div style={{ backgroundColor: 'rgba(249, 249, 249, 1)' }}
@@ -123,7 +95,7 @@ function UserDevisRecus() {
                         </tr>
                     </thead>
                     <tbody style={{ backgroundColor: 'rgba(107, 142, 35, 0.25)' }}>
-                        {quotes.map((quote, index) => (
+                        {transformedQuotes.map((quote, index) => (
                             <tr 
                                 key={index}
                                 onMouseEnter={() => setIsHovered(index)}
@@ -137,12 +109,12 @@ function UserDevisRecus() {
                             >
                                 <td className="items-center flex flex-row gap-2 text-center p-2">
                                     <img 
-                                        src={quote.pfp} 
-                                        alt="Client Avatar"  
+                                        src={quote.imageFile} // Use image_file for the profile picture
+                                        alt="Artisan Avatar"  
                                         className="rounded-full object-cover w-14 h-14 shadow-md border-2 border-white" 
                                     />
                                     <div className="flex flex-col justify-center">
-                                        <span>{quote.fullName}</span>
+                                        <span>{quote.fullName}</span> {/* Display full_name */}
                                         <div className='flex gap-2 items-center'>
                                             <GoAlertFill className='text-lightGreen'/>
                                             <span>{quote.urgency}</span>
@@ -169,35 +141,8 @@ function UserDevisRecus() {
                                         onClick={() => setSelectedImage(quote.illustration)}
                                         className="text-black shadow-md p-3 hover:bg-lightGreen hover:text-white rounded-md"
                                     >
-                                        img.pdf
+                                        illustration
                                     </button>
-                                    <button 
-                                        onClick={() => toggleLinks(index)}
-                                        className='flex items-center justify-center rounded-full text-iconSize text-black w-10 h-10 bg-white border border-gray-200 hover:bg-gray-200 transition-all duration-300'>
-                                        <BsThreeDots />
-                                    </button>
-                                    {showLinks === index && (
-                                        <div className="absolute right-0 top-12 w-48 bg-white shadow-lg border border-gray-300 rounded-lg z-50 p-4">
-                                            <div className="flex justify-end mb-2">
-                                                <button 
-                                                    onClick={() => setShowLinks(null)}
-                                                    className="text-red-500 text-lg"
-                                                >
-                                                    <IoClose />
-                                                </button>
-                                            </div>
-                                            <ul>
-                                                {["Envoyer un devis", "Contacter client"].map((link, i) => (
-                                                    <li 
-                                                        key={i} 
-                                                        className="p-2 hover:bg-gray-100 cursor-pointer transition-all duration-300 rounded-md"
-                                                    >
-                                                        {link}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
                                 </td>
                             </tr>
                         ))}

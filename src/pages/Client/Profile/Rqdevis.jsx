@@ -2,12 +2,17 @@ import { Sidebar } from "../../../components/Sidebar";
 import { Header } from "../../../components/Header";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { rqDevis } from "../../../api/devis"; // Import the rpDevis function
+import { getTokenFromCookie } from "../../../api/getProfile"; // Import the function to get the token
 
 function RqDevis() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [isUrgent, setIsUrgent] = useState(false);
+  const [imageFile, setImageFile] = useState(null); // State to store the image file
   const SIDEBAR_EXPANDED_WIDTH = 240;
   const SIDEBAR_COLLAPSED_WIDTH = 80;
+  const { artisan_id } = useParams();
 
   // React Hook Form setup
   const {
@@ -17,6 +22,7 @@ function RqDevis() {
     reset,
     setValue,
   } = useForm();
+  const artisan_id1 = artisan_id;
 
   // Toggle urgency and update form data
   const toggleUrgency = () => {
@@ -25,18 +31,60 @@ function RqDevis() {
     setValue("urgence", newUrgencyState); // Update the form data with the new urgency state
   };
 
-  // Form submission handler
-  const onSubmit = (data) => {
-    // Add artisan_id to the form data
-    const artisan_id = "12345"; // Replace with the actual artisan_id (e.g., from state, props, or API)
-    const formData = {
-      ...data,
-      artisan_id, // Include artisan_id in the form data
-    };
+  // Handle image file selection
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0]; // Get the first file
+    if (file) {
+      setImageFile(file); // Store the file in state
+    }
+  };
 
-    console.log("Form Data Submitted:", formData); // Log the updated form data
-    alert("Demande de devis envoyée avec succès !");
-    reset(); // Reset the form after submission
+  // Form submission handler
+  const onSubmit = async (data) => {
+    try {
+      // Get the token from cookies
+      const token = getTokenFromCookie();
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      // Prepare FormData for the API call
+      const formData = new FormData();
+      formData.append("service_demande", data.service_demande);
+      formData.append("description", data.description);
+      formData.append("location_user", data.location_user);
+      formData.append("date_souhaite", data.date_souhaite);
+      formData.append("budget_prevu", data.budget_prevu);
+      formData.append("urgence", data.urgence);
+      formData.append("artisan_id", artisan_id1);
+
+      // Append the image file if it exists
+      if (imageFile) {
+        formData.append("image_file", imageFile); // Use "mage_file" as the key
+      }
+
+      // Prepare credentials for the API call
+      const credentials = {
+        authorization: `Bearer ${token}`,
+      };
+
+      // Call the rpDevis API with FormData
+      console.log(formData);
+      const response = await rqDevis(formData, credentials);
+
+      // Handle success
+      console.log("Response from rpDevis:", response);
+      alert("Réponse au devis envoyée avec succès !");
+
+      // Reset the form after successful submission
+      reset();
+      setImageFile(null); // Clear the image file state
+    } catch (error) {
+      // Handle errors
+      console.error("Error submitting devis response:", error);
+      alert("Une erreur s'est produite lors de l'envoi de la réponse au devis.");
+    }
   };
 
   return (
@@ -103,13 +151,33 @@ function RqDevis() {
                 className="border-2 border-gray-300 rounded-md bg-lightYellow p-2"
               />
 
-              {/* Délai souhaité */}
-              <label htmlFor="delai">
-                Délai souhaité
+              {/* Location */}
+              <label htmlFor="location">
+                Localisation
                 <span className="text-red-500 font-bold"> * </span>:
               </label>
               <input
                 type="text"
+                id="location"
+                {...register("location_user", {
+                  required: "Ce champ est obligatoire",
+                })}
+                placeholder="Entrez votre localisation"
+                className="border-2 border-gray-300 rounded-md bg-lightYellow p-2"
+              />
+              {errors.location_user && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.location_user.message}
+                </p>
+              )}
+
+              {/* date souhaité */}
+              <label htmlFor="delai">
+                Date souhaité
+                <span className="text-red-500 font-bold"> * </span>:
+              </label>
+              <input
+                type="date"
                 id="delai"
                 {...register("date_souhaite", {
                   required: "Ce champ est obligatoire",
@@ -151,7 +219,8 @@ function RqDevis() {
               <input
                 type="file"
                 id="file"
-                {...register("illustrations")}
+                accept="image/*" // Allow only image files
+                onChange={handleImageUpload} // Handle file input change
                 className="border-2 border-gray-300 rounded-md bg-lightYellow p-2"
               />
 
@@ -185,8 +254,8 @@ function RqDevis() {
               </button>
             </form>
             <p className="text-textBlack">
-              Veuillez soumettre des images au format JPG, PNG ou PDF, avec une
-              taille maximale de 5 Mo et un maximum de 3 fichiers.
+              Veuillez soumettre une image au format JPG, PNG ou PDF, avec une
+              taille maximale de 5 Mo.
             </p>
           </div>
         </div>

@@ -21,8 +21,6 @@ function UserProfile() {
                         } 
                       });
                       setUser(response.user)
-                      console.log("user",user)
-                      console.log("user",response.user)
                       }catch (userLoginError) {
                         // If user login fails, try artisan login
                         

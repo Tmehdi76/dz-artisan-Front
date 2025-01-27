@@ -4,11 +4,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { rpDevis } from "../../../api/devis"; // Import the rpDevis function
 import { getTokenFromCookie } from "../../../api/getProfile"; // Import the function to get the token
+import { useParams } from "react-router-dom";
 
 function RpDevis() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const SIDEBAR_EXPANDED_WIDTH = 240;
   const SIDEBAR_COLLAPSED_WIDTH = 80;
+  const { id_rqdevis } = useParams();
+  const rqdevisID = id_rqdevis;
+
 
   // React Hook Form setup
   const {
@@ -17,6 +21,7 @@ function RpDevis() {
     formState: { errors },
     reset,
   } = useForm();
+  
 
   // Form submission handler
   const onSubmit = async (data) => {
@@ -35,7 +40,7 @@ function RpDevis() {
 
       // Add id_rqdevis to the form data
       const formData = {
-        id_rqdevis: "12345", // Replace with the actual id_rqdevis value (e.g., from props or state)
+        id_rqdevis: rqdevisID, // Replace with the actual id_rqdevis value (e.g., from props or state)
         ...data,
       };
 
