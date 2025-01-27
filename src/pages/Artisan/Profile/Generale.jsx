@@ -1,6 +1,5 @@
 import { FaLocationDot } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
-import Rating from './rating'
 import { getProfileArtisan, getTokenFromCookie } from "../../../api/getProfile";
 import { getArtisanSpecialites } from "../../../api/Specialite";
 import { useState, useEffect } from "react";
