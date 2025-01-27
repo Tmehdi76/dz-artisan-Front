@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import AvatarPlaceholder from '../../../assets/avatar.png';
+import AvatarPlaceholder from '../../../assets/Avatar.png';
 import { MdOutlineEdit } from "react-icons/md";
 import { userEditProfile , updateProfilePic} from "../../../api/UserEditProfile"; // Import the userEditProfile function
 import { getTokenFromCookie, getProfileArtisan } from '../../../api/getProfile';
