@@ -33,3 +33,9 @@ export const getProjects = async (credentials) =>{
   const {data} = await axios.get(`${BASE_URL}/artisan/getProjects`, credentials);
   return data;
 }
+
+export const getProfileArtisanById = async(artisan_id, credentials) => {
+    
+  const  { data } = await axios.get(`${BASE_URL}/artisans/${artisan_id}`, artisan_id, credentials);
+  return data;
+}

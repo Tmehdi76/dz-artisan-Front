@@ -11,3 +11,9 @@ export const addSpecialite = async(specialites, credentials) => {
     const  { data } = await axios.patch(`${BASE_URL}/artisan/addSpecialite`, specialites,{ headers: credentials });
     return data;
 }
+export const getArtisanSpecialitesById = async(artisan_id, credentials) => {
+    
+    const  { data } = await axios.get(`${BASE_URL}/artisans/specialites/${artisan_id}`, artisan_id,credentials);
+    return data;
+}
+

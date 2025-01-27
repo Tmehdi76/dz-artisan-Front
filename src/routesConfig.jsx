@@ -1,7 +1,4 @@
-// routesConfig.js
-
 import ProfileLayout from "./layouts/ProfileLayout";
-
 import PrivateRoute from "./PrivateRoute.jsx";
 
 import LoginPage from "./pages/Login";
@@ -34,7 +31,6 @@ import About from './pages/Guest/About.jsx';
 
 import Artisandash from './pages/Artisan/Profile/Artisandash.jsx';
 
-
 import UserDevis from "./pages/Client/Profile/UserDevis.jsx";
 import UserDevisRecus from "./pages/Client/Profile/UserDevisRecus.jsx";
 import UserDevisrp from "./pages/Client/Profile/UserDevisrp.jsx";
@@ -43,8 +39,8 @@ import Devis from "./pages/Artisan/Profile/Devis.jsx";
 import DevisRecus from './pages/Artisan/Profile/DevisRecus';
 import Devisrp from './pages/Artisan/Profile/Devisrp.jsx';
 
-
 import NotFoundPage from "./pages/404page.jsx";
+import ArtisanGeneral from "./pages/Client/VisitArtisan/ArtisanGenerale.jsx"
 
 // Shared routes for both client and artisan
 const sharedRoutes = [
@@ -58,10 +54,9 @@ export const routes = [
   { path: "/contact", element: <Contact /> },
   { path: "/about", element: <About /> },
   { path: "/login", element: <LoginPage /> },
-  
-  
   { path: "/welcome", element: <WelcomePage /> },
-  //Ta123456
+
+  // Client routes
   {
     path: "/user",
     children: [
@@ -70,9 +65,7 @@ export const routes = [
       { path: "devis", element: <RqDevis /> },
       {
         path: "devis",
-        element: (
-            <UserDevis />
-        ),
+        element: <UserDevis />,
         children: [
           { path: "", element: <UserDevisRecus /> },
           { path: "userdevisrp", element: <UserDevisrp /> },
@@ -87,7 +80,6 @@ export const routes = [
         ),
         children: [
           { path: "", element: <UserProfile /> },
-          
         ],
       },
       {
@@ -99,35 +91,36 @@ export const routes = [
         ),
         children: [
           { path: "", element: <EditProfileUser /> },
-          
         ],
       },
       ...sharedRoutes, // Include shared routes here
     ],
   },
+
+  // Artisan routes
   {
     path: "/artisan",
     children: [
       { path: "", element: <Artisandash /> },
       { path: "signup", element: <ArtisanSignUpPage /> },
       { path: "devis", element: <RpDevis /> },
+      
+      
       {
         path: "devis",
-        element: (
-            <Devis />
-        ),
+        element: <Devis />,
         children: [
           { path: "", element: <DevisRecus /> },
           { path: "Devisrp", element: <Devisrp /> },
         ],
       },
-      
       {
         path: "edit-profile",
         element: (
           <PrivateRoute allowedRoles={["artisan"]}>
             <ProfileLayout />
-          </PrivateRoute>),
+          </PrivateRoute>
+        ),
         children: [
           { path: "", element: <EditProfile /> },
           { path: "portfolio", element: <EditPortfolio /> },
@@ -137,9 +130,10 @@ export const routes = [
       {
         path: "profile",
         element: (
-        <PrivateRoute allowedRoles={["artisan"]}>
-          <ArtisanProfile />
-        </PrivateRoute>),
+          <PrivateRoute allowedRoles={["artisan"]}>
+            <ArtisanProfile />
+          </PrivateRoute>
+        ),
         children: [
           { path: "", element: <Generale /> },
           { path: "portfolio", element: <Portfolio /> },
@@ -149,8 +143,21 @@ export const routes = [
       ...sharedRoutes, // Include shared routes here
     ],
   },
+
+  // Public route for viewing artisan profiles
   {
-    path: "*", 
-    element: <NotFoundPage /> 
-  }
+    path: "/artisans/:artisan_id",
+    element: <ArtisanProfile />,
+    children: [
+      {
+        path: "", // Dynamic route for artisan profiles
+        element: <ArtisanGeneral />, // Render the Generale component
+      },
+    ],
+  },
+  // 404 Page
+  {
+    path: "*",
+    element: <NotFoundPage />,
+  },
 ];
