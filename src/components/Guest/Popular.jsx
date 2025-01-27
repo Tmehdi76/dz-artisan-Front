@@ -130,7 +130,7 @@ export default function Popular() {
           </div>
           <div className="lg:w-1/2 h-full overflow-hidden rounded-2xl">
             <img
-              src="../../artisan algerienne .jpg"
+              src="../../artisan algerienne.jpg"
               alt="Artisan algérien"
               className="rounded-2xl w-full h-full hoverImg"
             />
