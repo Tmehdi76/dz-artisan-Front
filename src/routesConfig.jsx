@@ -22,7 +22,7 @@ import ArtisanProfile from "./pages/Artisan/Profile/ArtisanProfile";
 import Portfolio from './pages/Artisan/Profile/Portfolio';
 import Certificate from './pages/Artisan/Profile/Certificate';
 import Generale from './pages/Artisan/Profile/Generale';
-import RqDevis from './pages/client/Profile/RqDevis.jsx';
+import RqDevis from './pages/Client/Profile/Rqdevis.jsx';
 import RpDevis from './pages/Artisan/Profile/RpDevis';
 import Facture from './pages/Artisan/Profile/Facture';
 import DashBoard from './pages/Client/Profile/dashBoard1.jsx';
