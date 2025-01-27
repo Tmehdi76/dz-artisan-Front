@@ -1,11 +1,14 @@
 import { MdEmail } from "react-icons/md";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { TbClockHour10Filled } from "react-icons/tb";
-import { getProjects, getTokenFromCookie } from "../../../api/getProfile";
+import {  getProjectsById, getTokenFromCookie } from "../../../api/getProfile";
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom"; // Import useParams to get the artisan_id from the URL
+
 function Portfolio() {
 
-
+    const { artisan_id } = useParams(); // Extract artisan_id from the URL
+    console.log(artisan_id)
     const [projects, setProjects] = useState([]);
 
     const GetProjects = async () => {
@@ -13,7 +16,7 @@ function Portfolio() {
             const token = getTokenFromCookie();  // Get the token from cookies
                 if (token) {
                     try{
-                        const response = await getProjects({ 
+                        const response = await getProjectsById(artisan_id,{ 
                             headers: { 
                                 authorization: `Bearer ${token}`
                         } 

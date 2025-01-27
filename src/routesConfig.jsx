@@ -41,6 +41,8 @@ import Devisrp from './pages/Artisan/Profile/Devisrp.jsx';
 
 import NotFoundPage from "./pages/404page.jsx";
 import ArtisanGeneral from "./pages/Client/VisitArtisan/ArtisanGenerale.jsx"
+import ArtisanCertificate from "./pages/Client/VisitArtisan/ArtisanCertificate.jsx"
+import ArtisanPortfolio from "./pages/Client/VisitArtisan/ArtisanPortfolio.jsx"
 
 // Shared routes for both client and artisan
 const sharedRoutes = [
@@ -153,8 +155,17 @@ export const routes = [
         path: "", // Dynamic route for artisan profiles
         element: <ArtisanGeneral />, // Render the Generale component
       },
+      {
+        path: "portfolio", // Dynamic route for artisan profiles
+        element: <ArtisanPortfolio />, // Render the Generale component
+      },
+      {
+        path: "certificate", // Dynamic route for artisan profiles
+        element: <ArtisanCertificate />, // Render the Generale component
+      }
     ],
   },
+
   // 404 Page
   {
     path: "*",

@@ -16,7 +16,8 @@ const Messagerie = () => {
     const [chatRooms, setChatRooms] = useState([]);
     const [selectedChatRoomId, setSelectedChatRoomId] = useState(null);
     const [user, setUser] = useState(null);
-
+    const [isLoading, setIsLoading] = useState(false); // New state for loading indicator
+    const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
     // Fetch user profile
     const getUserProfile = async () => {
         try {
@@ -46,6 +47,8 @@ const Messagerie = () => {
         const fetchChatRooms = async () => {
             if (!user) return; // Wait until user data is available
 
+            setIsLoading(true); // Set loading to true before fetching
+
             try {
                 let endpoint;
                 if (user.role === 'artisan') {
@@ -56,6 +59,7 @@ const Messagerie = () => {
 
                 const response = await axios.get(endpoint);
                 const chatRooms = response.data;
+                console.log(chatRooms);
 
                 // Fetch user/artisan details for each chat room
                 const chatRoomsWithDetails = await Promise.all(
@@ -85,6 +89,8 @@ const Messagerie = () => {
                 setChatRooms(chatRoomsWithDetails);
             } catch (error) {
                 console.error("Error fetching chat rooms:", error);
+            } finally {
+                setIsLoading(false); // Set loading to false after fetching (whether successful or not)
             }
         };
 
@@ -176,83 +182,104 @@ const Messagerie = () => {
             </div>
 
             <div className="flex flex-1 pt-16">
-                {/* Sidebar */}
-                <div className="fixed top-0 left-0 h-full z-40 transition-all duration-300 ease-in-out">
-                    <Sidebar isExpanded={false} />
-                </div>
+               {/* Sidebar */}
+                               <div className="fixed top-16 left-0 h-full z-40 transition-all duration-300 ease-in-out">
+                                   <Sidebar 
+                                       isExpanded={false} 
+                                       setIsExpanded={setIsSidebarExpanded}
+                                   />
+                               </div>
+               
 
                 {/* Main Content */}
                 <div className="flex-1 flex">
                     {/* Contacts */}
                     <div className="w-1 max-h-screen"></div>
                     <div className="ml-20 left-2 fixed top-16 h-full w-52 bg-lightYellow flex flex-col gap-2 py-6">
-                        {chatRooms.map((chatRoom) => (
-                            <div
-                                key={chatRoom.id}
-                                className="flex gap-1 hover:bg-[rgba(217,217,217,0.16)] px-5 py-2 items-center cursor-pointer"
-                                onClick={() => {
-                                    console.log("Selected Chat Room ID:", chatRoom); // Debugging
-                                    setSelectedChatRoomId(chatRoom.id);
-                                }}
-                            >
-                                {/* Display profile image */}
-                                <img
-                                    src={chatRoom.userOrArtisan?.image_file || avatar} // Use avatar as fallback
-                                    alt="Profile"
-                                    className="rounded-full w-8 h-8 object-cover"
-                                />
-                                <p className="font-bold text-xs text-[rgba(0,0,0,0.56)]">
-                                    {chatRoom.userOrArtisan?.user_name || chatRoom.userOrArtisan?.full_name}
-                                </p>
+                        {isLoading ? (
+                            // Display loading spinner or message
+                            <div className="flex justify-center items-center h-full">
+                                <p className="text-gray-500">Chargement des conversations...</p>
                             </div>
-                        ))}
+                        ) : (
+                            chatRooms.map((chatRoom) => (
+                                <div
+                                    key={chatRoom.id}
+                                    className={`flex gap-1 hover:bg-[rgba(217,217,217,0.16)] px-5 py-2 items-center cursor-pointer ${
+                                        selectedChatRoomId === chatRoom.id ? 'bg-[rgba(0,0,0,0.1)]' : ''
+                                    }`}
+                                    onClick={() => {
+                                        setSelectedChatRoomId(chatRoom.id);
+                                    }}
+                                >
+                                    {/* Display profile image */}
+                                    <img
+                                        src={chatRoom.userOrArtisan?.image_file || avatar} // Use avatar as fallback
+                                        alt="Profile"
+                                        className="rounded-full w-8 h-8 object-cover"
+                                    />
+                                    <p className="font-bold text-xs text-[rgba(0,0,0,0.56)]">
+                                        {chatRoom.userOrArtisan?.user_name || chatRoom.userOrArtisan?.full_name}
+                                    </p>
+                                </div>
+                            ))
+                        )}
                     </div>
                     {/* Chat Component */}
                     <div className="flex-1 pl-1 ml-72 rounded-lg">
-                        <div className="h-full flex flex-col justify-between">
-                            {/* Chat Messages */}
-                            <div
-                                className="space-y-4 pt-8 overflow-y-auto py-3 pl-7 pr-8 flex-grow max-h-[calc(100vh-10rem)]"
-                                ref={messagesContainerRef}
-                            >
-                                {messages.map((message) => (
-                                    <div
-                                        key={message.id}
-                                        className={`flex justify-${
-                                            message.sender_id === user.id ? 'end' : 'start'
-                                        }`}
-                                    >
+                        {selectedChatRoomId ? (
+                            <div className="h-full flex flex-col justify-between">
+                                {/* Chat Messages */}
+                                <div
+                                    className="space-y-4 pt-8 overflow-y-auto py-3 pl-7 pr-8 flex-grow max-h-[calc(100vh-10rem)]"
+                                    ref={messagesContainerRef}
+                                >
+                                    {messages.map((message) => (
                                         <div
-                                            className={`p-3 rounded-3xl rounded-tl-none max-w-xs ${
-                                                message.sender_id === user.id
-                                                    ? 'bg-yellow-200'
-                                                    : 'bg-yellow-100'
+                                            key={message.id}
+                                            className={`flex justify-${
+                                                message.sender_id === user.id ? 'end' : 'start'
                                             }`}
                                         >
-                                            <p>{message.message}</p>
+                                            <div
+                                                className={`p-3 rounded-3xl rounded-tl-none max-w-xs ${
+                                                    message.sender_id === user.id
+                                                        ? 'bg-yellow-200'
+                                                        : 'bg-yellow-100'
+                                                }`}
+                                            >
+                                                <p>{message.message}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
+                                    ))}
+                                </div>
 
-                            {/* Input Area */}
-                            <div className="flex p-4 bg-lightYellow opacity-85 pr-8">
-                                <input
-                                    type="text"
-                                    placeholder="Commencer à écrire..."
-                                    value={inputText}
-                                    onChange={(e) => setInputText(e.target.value)}
-                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-3xl shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={handleSendMessage}
-                                    className="fixed right-10 bottom-4 text-custom_green p-2 rounded-full hover:text-green-600 transition-colors duration-200"
-                                >
-                                    <BsFillSendFill className="h-7 w-7" />
-                                </button>
+                                {/* Input Area */}
+                                <div className="flex p-4 bg-lightYellow opacity-85 pr-8">
+                                    <input
+                                        type="text"
+                                        placeholder="Commencer à écrire..."
+                                        value={inputText}
+                                        onChange={(e) => setInputText(e.target.value)}
+                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-3xl shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={handleSendMessage}
+                                        className="fixed right-10 bottom-4 text-custom_green p-2 rounded-full hover:text-green-600 transition-colors duration-200"
+                                    >
+                                        <BsFillSendFill className="h-7 w-7" />
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        ) : (
+                            // Display a message when no chat room is selected
+                            <div className="h-full flex items-center justify-center">
+                                <p className="text-gray-500 text-lg">
+                                    Sélectionnez une conversation pour commencer à discuter.
+                                </p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

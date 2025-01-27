@@ -1,10 +1,13 @@
 import { LiaUniversitySolid } from "react-icons/lia";
 import { IoIosArrowForward } from "react-icons/io";
 import { useState, useEffect } from 'react';
-import { getCertificates, getTokenFromCookie } from "../../../api/getProfile";
+import {  getCertificatesById, getTokenFromCookie } from "../../../api/getProfile";
+import { useParams } from "react-router-dom"; // Import useParams to get the artisan_id from the URL
+
 
 function Certificate() {
     // Track expanded state for each card using their indices
+    const { artisan_id } = useParams(); // Extract artisan_id from the URL
     const [expandedCards, setExpandedCards] = useState({});
     const [certificates, setCertificates] = useState([]);
     
@@ -31,7 +34,7 @@ function Certificate() {
                             const token = getTokenFromCookie();  // Get the token from cookies
                             if (token) {
                               try{
-                              const response = await getCertificates({ 
+                              const response = await getCertificatesById(artisan_id,{ 
                                 headers: { 
                                   authorization: `Bearer ${token}`
                                 } 

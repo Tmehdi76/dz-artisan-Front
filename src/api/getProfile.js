@@ -39,3 +39,11 @@ export const getProfileArtisanById = async(artisan_id, credentials) => {
   const  { data } = await axios.get(`${BASE_URL}/artisans/${artisan_id}`, artisan_id, credentials);
   return data;
 }
+export const getProjectsById = async (artisan_id,credentials) =>{
+  const {data} = await axios.get(`${BASE_URL}/artisan/${artisan_id}/getProjects`, credentials);
+  return data;
+}
+export const getCertificatesById = async (artisan_id,credentials) =>{
+  const {data} = await axios.get(`${BASE_URL}/artisan/${artisan_id}/getCertificats`, credentials);
+  return data;
+}
