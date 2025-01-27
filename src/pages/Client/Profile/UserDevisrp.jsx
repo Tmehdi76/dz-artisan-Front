@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { IoIosArrowDown } from "react-icons/io";
 import { BsThreeDots } from "react-icons/bs";
 import { GoAlertFill } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
+import {UserrpDevisList} from "../../../api/devis";
+import { getTokenFromCookie } from '../../../api/getProfile';
+
 
 function ImageModal({ imageUrl, onClose }) {
     return (
@@ -63,6 +66,39 @@ function UserDevisrp() {
     const [selectedImage, setSelectedImage] = useState(null);
     const [isHovered, setIsHovered] = useState(null);
     const [sortDirection, setSortDirection] = useState('asc');
+
+
+    const [devisList, setDevisList] = useState(null);
+    
+      // Function to fetch user profile
+      const UserDevisListrp = async () => {
+        try {
+          const token = getTokenFromCookie();  // Get the token from cookies
+          if (token) {
+            try {
+              const response = await UserrpDevisList({
+                headers: {
+                  authorization: `Bearer ${token}`
+                }
+              });
+              setDevisList(response);  // Set the user data
+            } catch (userLoginError) {
+              // Handle user login failure or error
+              console.error("Error fetching devis:", userLoginError);
+            }
+          } else {
+            console.error("No token found");  // Log error if no token is found
+          }
+        } catch (error) {
+          console.error("Error fetching devis:", error);  // Handle the error (e.g., show a notification)
+          throw error;  // Handle further error as needed
+        }
+      };
+    
+      useEffect(() => {
+        UserDevisListrp();  // Call the function when the component mounts
+      }, []); 
+
 
     const handleFilterByPrice = () => {
         const sortedQuotes = [...quotes].sort((a, b) => {

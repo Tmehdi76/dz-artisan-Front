@@ -1,4 +1,4 @@
-import React from "react"; 
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import logo from "../../../assets/Logo.png";
 import RightSection from "../../../components/SignUp/RightSection"
@@ -11,6 +11,7 @@ const SignUp = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     const payload = {
@@ -27,6 +28,7 @@ const SignUp = () => {
           const response = await signupArtisan(payload); // API call
           console.log("Signup successful:", response);
           alert("Compte créé avec succès !");
+          navigate("/login");
         } catch (error) {
           console.error("Error during signup:", error);
           alert("Une erreur s'est produite. Veuillez réessayer.");
@@ -176,9 +178,11 @@ const SignUp = () => {
                   {/* Footer */}
                   <p className="text-sm text-center text-gray-600 mt-3">
                       Vous avez déjà un compte?{" "}
-                      <a href="#" className="text-custom_green font-semibold">
-                      Connectez-vous ici
-                      </a>
+                      <Link to = "/login">
+                        <a href="#" className="text-custom_green font-semibold">
+                          Connectez-vous ici
+                        </a>
+                      </Link>
                   </p>
                   </div>
               </div>

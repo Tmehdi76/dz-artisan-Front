@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 import { useForm } from "react-hook-form";
 import logo from "../../../assets/Logo.png";
@@ -15,7 +15,7 @@ const SignUp = () => {
   } = useForm();
 
 
-  
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
 
@@ -33,6 +33,7 @@ const SignUp = () => {
       const response = await signup(payload); // API call
       console.log("Signup successful:", response);
       alert("Compte créé avec succès !");
+      navigate("/login");
     } catch (error) {
       console.error("Error during signup:", error);
       alert("Une erreur s'est produite. Veuillez réessayer.");
