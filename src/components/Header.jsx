@@ -1,5 +1,4 @@
 import Logo from '../assets/Logo.png'
-import BASE_URL from "../config/config";
 import { getTokenFromCookie, getProfileArtisan } from '../api/getProfile';
 import { useState, useEffect } from 'react';
 

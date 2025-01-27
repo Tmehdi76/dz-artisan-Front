@@ -1,4 +1,4 @@
-import logo from "../assets/logo.png"
+import logo from "../assets/Logo.png"
 import { FaRegCopyright } from "react-icons/fa6";
 
 const Footer = () =>{

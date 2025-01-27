@@ -1,6 +1,6 @@
 import backgroundImg from "../../assets/SignUpBackGround.png";
-import avatar from "../../assets/avatar.png";
-import avatar1 from "../../assets/avatar1.png";
+import avatar from "../../assets/Avatar.png";
+import avatar1 from "../../assets/Avatar1.png";
 
 const RightSection = () =>{
     return(
