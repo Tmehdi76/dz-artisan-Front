@@ -28,7 +28,7 @@ import Facture from './pages/Artisan/Profile/Facture';
 import DashBoard from './pages/Client/Profile/dashBoard1.jsx';
 
 import Homepage from "./pages/Guest/HomePage.jsx"
-import Services from './Pages/Guest/Services.jsx';
+import Services from './pages/Guest/SerVices.jsx';
 import Contact from './Pages/Guest/Contact.jsx';
 import About from './pages/Guest/About_.jsx';
 
