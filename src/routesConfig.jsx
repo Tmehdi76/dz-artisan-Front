@@ -1,4 +1,6 @@
 import ProfileLayout from "./layouts/ProfileLayout";
+import UserProfileLayout from "./layouts/UserprofileLayout.jsx";
+
 import PrivateRoute from "./PrivateRoute.jsx";
 
 import LoginPage from "./pages/Login";
@@ -88,7 +90,7 @@ export const routes = [
         path: "edit-profile",
         element: (
           <PrivateRoute allowedRoles={["user"]}>
-            <ArtisanProfile />
+            <UserProfileLayout />
           </PrivateRoute>
         ),
         children: [

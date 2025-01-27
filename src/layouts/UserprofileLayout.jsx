@@ -57,18 +57,6 @@ const ProfileLayout = () =>{
                             >
                                 Général
                             </Link>
-                            <Link
-                                to="portfolio"
-                                className={`pb-2 ${activeTab === "Portfolio" ? "border-b-blue-600 border-b-2" : ""}`}
-                            >
-                                Portfolio
-                            </Link>
-                            <Link
-                                to="certificate"
-                                className={`pb-2 ${activeTab === "Certificats" ? "border-b-blue-600 border-b-2" : ""}`}
-                            >
-                                Certificats
-                            </Link>
                         </div>
                     </div>
 

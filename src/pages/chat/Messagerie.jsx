@@ -18,6 +18,7 @@ const Messagerie = () => {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(false); // New state for loading indicator
     const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+
     // Fetch user profile
     const getUserProfile = async () => {
         try {
@@ -133,8 +134,14 @@ const Messagerie = () => {
     useEffect(() => {
         if (lastMessage) {
             const message = JSON.parse(lastMessage.data);
-            // Add the new message to the end of the array
-            setMessages((prevMessages) => [...prevMessages, message]);
+            // Add the new message only if it doesn't already exist in the messages array
+            setMessages((prevMessages) => {
+                const messageExists = prevMessages.some((msg) => msg.id === message.id);
+                if (!messageExists) {
+                    return [...prevMessages, message];
+                }
+                return prevMessages;
+            });
         }
     }, [lastMessage]);
 
@@ -157,18 +164,6 @@ const Messagerie = () => {
             // Send the message over WebSocket
             sendMessage(JSON.stringify(messageData));
 
-            // Optimistically update the UI (add to the end of the array)
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                {
-                    id: Date.now(), // Temporary ID (replace with server-generated ID)
-                    sender_id: user.id,
-                    message: inputText,
-                    is_artisan: user.role === 'artisan',
-                    sent_at: new Date().toISOString(),
-                },
-            ]);
-
             // Clear the input field
             setInputText('');
         }
@@ -182,14 +177,13 @@ const Messagerie = () => {
             </div>
 
             <div className="flex flex-1 pt-16">
-               {/* Sidebar */}
-                               <div className="fixed top-16 left-0 h-full z-40 transition-all duration-300 ease-in-out">
-                                   <Sidebar 
-                                       isExpanded={false} 
-                                       setIsExpanded={setIsSidebarExpanded}
-                                   />
-                               </div>
-               
+                {/* Sidebar */}
+                <div className="fixed top-16 left-0 h-full z-40 transition-all duration-300 ease-in-out">
+                    <Sidebar 
+                        isExpanded={false} 
+                        setIsExpanded={setIsSidebarExpanded}
+                    />
+                </div>
 
                 {/* Main Content */}
                 <div className="flex-1 flex">

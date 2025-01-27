@@ -37,10 +37,10 @@ function DevisRecus() {
     const [error, setError] = useState(null); // Add error state
     const navigate = useNavigate();
 
-
     const handleNavigate = (id_rqdevis) => {
         navigate(`/artisan/rpdevis/${id_rqdevis}`); // Navigate to the desired route with id_rqdevis as a parameter
     };
+
     // Function to fetch devis list
     const ArtisanDevisListrq = async () => {
         try {
@@ -123,13 +123,15 @@ function DevisRecus() {
                                 className="rounded-2xl text-center border-t-2 border-slate-500 transition-all duration-300"
                             > 
                                 <td className="items-center flex flex-row gap-2 text-center p-2">
-                                    <img 
-                                        src="jardinier.png" // Placeholder image, replace with actual user image if available
-                                        alt="Client Avatar"  
-                                        className="rounded-full object-cover w-14 h-14 shadow-md border-2 border-white" 
-                                    />
+                                    {devis.image_file && (
+                                        <img 
+                                            src={devis.image_file} // Use the client's image file
+                                            alt={devis.user_name} // Use the client's name as alt text
+                                            className="rounded-full object-cover w-14 h-14 shadow-md border-2 border-white" 
+                                        />
+                                    )}
                                     <div className="flex flex-col justify-center">
-                                        <span>User {devis.id_user}</span>
+                                        <span>{devis.user_name}</span> {/* Use the client's name */}
                                         <div className='flex gap-2 items-center'>
                                             <GoAlertFill className='text-lightGreen'/>
                                             <span>{devis.urgence ? "Urgent" : "Normal"}</span>
@@ -180,15 +182,12 @@ function DevisRecus() {
                                                 </button>
                                             </div>
 
-                                            
-                                                    <div 
-                                                        onClick={() => handleNavigate(devis.id_rqdevis)} 
-                                                        className="p-2 hover:bg-gray-100 cursor-pointer transition-all duration-300 rounded-md"
-                                                    >
-                                                        Envoyer un devis de reponse
-                                                    </div>
-
-
+                                            <div 
+                                                onClick={() => handleNavigate(devis.id_rqdevis)} 
+                                                className="p-2 hover:bg-gray-100 cursor-pointer transition-all duration-300 rounded-md"
+                                            >
+                                                Envoyer un devis de reponse
+                                            </div>
                                         </div>
                                     )}
                                 </td>

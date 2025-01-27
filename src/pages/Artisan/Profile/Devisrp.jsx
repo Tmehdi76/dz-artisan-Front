@@ -120,8 +120,15 @@ function Devisrp() {
                                 className="rounded-2xl text-center border-t-2 border-slate-500 transition-all duration-300"
                             > 
                                 <td className="items-center flex flex-row gap-2 text-center p-2">
+                                    {devis.image_file && (
+                                        <img 
+                                            src={devis.image_file} // Use the client's image file
+                                            alt={devis.user_name} // Use the client's name as alt text
+                                            className="rounded-full object-cover w-14 h-14 shadow-md border-2 border-white" 
+                                        />
+                                    )}
                                     <div className="flex flex-col justify-center">
-                                        <span>User {devis.id_user}</span>
+                                        <span>{devis.user_name}</span> {/* Use the client's name */}
                                         <div className='flex gap-2 items-center'>
                                             <GoAlertFill className='text-lightGreen'/>
                                             <span>{devis.urgence ? "Urgent" : "Normal"}</span>
@@ -158,8 +165,6 @@ function Devisrp() {
                                     {expandedIndex === index && (
                                         <p className="text-sm text-gray-700 mt-2">{devis.remarques}</p>
                                     )}
-
-                                
                                 </td>
                             </tr>
                         ))}
